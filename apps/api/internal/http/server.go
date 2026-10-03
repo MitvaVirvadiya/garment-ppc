@@ -35,8 +35,12 @@ func New(pool *pgxpool.Pool, origin string, ticker *sim.Ticker) *Server {
 	})
 	app.Use(recover.New())
 	app.Use(logger.New())
+	origins := origin
+	if !strings.Contains(origins, "127.0.0.1:3014") {
+		origins += ",http://127.0.0.1:3014,http://localhost:3014"
+	}
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: origin,
+		AllowOrigins: origins,
 		AllowHeaders: "Origin, Content-Type, Accept, X-Demo-User, X-Demo-Role",
 		AllowMethods: "GET,POST,PATCH,DELETE,OPTIONS",
 	}))
